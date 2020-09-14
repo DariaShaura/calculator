@@ -75,12 +75,12 @@ public class ValidationFormulaService implements ValidationService {
     }
 
     @Override
-    public boolean IsNextCharacterInExpectedCharacterTypeSet(EnumSet<CharacterType> expectedCharacterTypeSet, CharacterType characterType){
+    public boolean isNextCharacterInExpectedCharacterTypeSet(EnumSet<CharacterType> expectedCharacterTypeSet, CharacterType characterType){
         return expectedCharacterTypeSet.contains(characterType);
     }
 
     @Override
-    public boolean IsFormulaContainsOnlyValidCharacters(String formula)
+    public boolean isFormulaContainsOnlyValidCharacters(String formula)
     {
         if(formula.isEmpty()){
             return false;

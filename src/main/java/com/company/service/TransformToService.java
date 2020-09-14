@@ -44,7 +44,7 @@ public class TransformToService implements TransformService {
             CharacterType characterType = validationService.getCharacterType(previousType, ch);
             previousType = characterType;
 
-            if(!validationService.IsNextCharacterInExpectedCharacterTypeSet(expectedCharacterTypeSet, characterType)){
+            if(!validationService.isNextCharacterInExpectedCharacterTypeSet(expectedCharacterTypeSet, characterType)){
                 throw  new InvalidFormulaException("Недопустимая запись формулы!");
             }
 

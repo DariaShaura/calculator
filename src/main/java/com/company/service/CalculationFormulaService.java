@@ -21,7 +21,7 @@ public class CalculationFormulaService implements CalculationService {
         validationService = new ValidationFormulaService();
         transformToService = new TransformToService(validationService);
 
-        if (validationService.IsFormulaContainsOnlyValidCharacters(strFormula)) {
+        if (validationService.isFormulaContainsOnlyValidCharacters(strFormula)) {
             formula = new Formula(strFormula.replaceAll(" ", ""));
 
             transformToService.transformToRPNView(formula);

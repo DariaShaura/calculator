@@ -10,7 +10,7 @@ public interface ValidationService {
 
     EnumSet<CharacterType> getExpectedCharacterTypeSet(CharacterType characterType);
 
-    boolean IsNextCharacterInExpectedCharacterTypeSet(EnumSet<CharacterType> expectedCharacterTypeSet, CharacterType characterType);
+    boolean isNextCharacterInExpectedCharacterTypeSet(EnumSet<CharacterType> expectedCharacterTypeSet, CharacterType characterType);
 
-    boolean IsFormulaContainsOnlyValidCharacters(String formula);
+    boolean isFormulaContainsOnlyValidCharacters(String formula);
 }
