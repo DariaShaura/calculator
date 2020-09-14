@@ -12,11 +12,12 @@ public class InputOutputFormula {
         System.out.println("Введите формулу (завершение работы - q)");
 
         String inputFormula = scanner.nextLine();
-        while ("".equals(inputFormula)){
-            inputFormula = scanner.nextLine();
-        }
 
         return inputFormula;
+    }
+
+    public static void printFormulaResult(double result){
+        System.out.println(result);
     }
 
     public static void terminateInput(){

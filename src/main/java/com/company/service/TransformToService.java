@@ -5,40 +5,15 @@ import com.company.exception.InvalidFormulaException;
 
 import java.util.*;
 
-public class TransformToService {
+public class TransformToService implements TransformService {
 
-    public static CharacterType getCharacterType(CharacterType previousType, char ch)
-            throws InvalidFormulaException{
+    ValidationFormulaService validationService;
 
-        if (Character.isDigit(ch)) {
-            if(previousType ==  CharacterType.DOT_NUMBER) {
-                return previousType;
-            }
-            else {
-                return CharacterType.NUMBER;
-            }
-        } else if (ch == '.') {
-            if(previousType != CharacterType.DOT_NUMBER) {
-                return CharacterType.DOT_NUMBER;
-            }
-            else{
-                throw new InvalidFormulaException("Недопустимая запись формулы!");
-            }
-        } else if(ch == '('){
-            return CharacterType.LEFT_BRACKET_OPERATION;
-        }
-        else if (ch == ')'){
-            return CharacterType.RIGHT_BRACKET_OPERATION;
-        }
-        else if((ch == '-') && ((previousType == null) || (previousType == CharacterType.LEFT_BRACKET_OPERATION))){
-            return CharacterType.PREFIX_OPERATION;
-        }
-        else{
-            return CharacterType.BIN_OPERATION;
-        }
+    public TransformToService(ValidationFormulaService validationService) {
+        this.validationService = validationService;
     }
 
-    public static EnumClassOperator getOperator(CharacterType characterType, char ch)
+    private EnumClassOperator getOperator(CharacterType characterType, char ch)
                     throws InvalidFormulaException {
         for(EnumClassOperator operator: EnumClassOperator.values()){
             if((operator.getOperatorCharacter() == ch) && (operator.getOperationType() == characterType)){
@@ -49,7 +24,8 @@ public class TransformToService {
         throw new InvalidFormulaException("Недопустимая запись формулы!!!");
     }
 
-    public static void toRPN(Formula formula)
+    @Override
+    public void transformToRPNView(Formula formula)
             throws InvalidFormulaException {
         Deque<EnumClassOperator> stack = new ArrayDeque<>();
         StringBuilder number = new StringBuilder();
@@ -59,20 +35,20 @@ public class TransformToService {
         CharacterType previousType = null;
         EnumClassOperator operator;
 
-        expectedCharacterTypeSet = ValidationFormulaService.getExpectedCharacterTypeSet(previousType);
+        expectedCharacterTypeSet = validationService.getExpectedCharacterTypeSet(previousType);
 
         for (int i = 0, length = formula.getInputFormula().length(); i < length; i++) {
 
             char ch = formula.getInputFormula().charAt(i);
 
-            CharacterType characterType = getCharacterType(previousType, ch);
+            CharacterType characterType = validationService.getCharacterType(previousType, ch);
             previousType = characterType;
 
-            if(!ValidationFormulaService.IsNextCharacterValid(expectedCharacterTypeSet, characterType)){
+            if(!validationService.IsNextCharacterInExpectedCharacterTypeSet(expectedCharacterTypeSet, characterType)){
                 throw  new InvalidFormulaException("Недопустимая запись формулы!");
             }
 
-            expectedCharacterTypeSet = ValidationFormulaService.getExpectedCharacterTypeSet(previousType);
+            expectedCharacterTypeSet = validationService.getExpectedCharacterTypeSet(previousType);
 
             switch (characterType) {
                 case NUMBER:

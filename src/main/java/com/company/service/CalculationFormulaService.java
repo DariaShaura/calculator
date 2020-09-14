@@ -6,46 +6,30 @@ import com.company.exception.DivisionByZeroException;
 import com.company.exception.InvalidFormulaException;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 
-public class CalculationFormulaService {
+public class CalculationFormulaService implements CalculationService {
     private Formula formula;
+    private ValidationFormulaService validationService;
+    private TransformToService transformToService;
 
     public CalculationFormulaService() {
     }
 
-    public void calculator(){
-        try {
-            while (true) {
-                String inputFormula = InputOutputFormula.inputFormula();
+    @Override
+    public double calculate(String strFormula)
+            throws InvalidFormulaException, DivisionByZeroException{
+        validationService = new ValidationFormulaService();
+        transformToService = new TransformToService(validationService);
 
-                if (inputFormula.equals("q")) {
-                    System.out.println("Завершение работы калькулятора");
-                    return;
-                }
+        if (validationService.IsFormulaContainsOnlyValidCharacters(strFormula)) {
+            formula = new Formula(strFormula.replaceAll(" ", ""));
 
-                 try {
-                     if (ValidationFormulaService.IsCharactersValid(inputFormula)) {
-                         formula = new Formula(inputFormula.replaceAll(" ", ""));
+            transformToService.transformToRPNView(formula);
 
-                         TransformToService.toRPN(formula);
-
-                         System.out.println("Result = " + calculateFromRPN());
-                     }
-                     else{
-                         throw  new InvalidFormulaException("Недопустимая запись формулы!");
-                     }
-                 }
-                 catch (InvalidFormulaException | IllegalArgumentException | DivisionByZeroException e){
-                 System.out.println(e.getMessage());
-                 }
-
-            }
+            return calculateFromRPN();
         }
-        catch (Exception e){
-            System.out.println(e.getMessage());
-            InputOutputFormula.terminateInput();
-        }
+
+            throw new InvalidFormulaException("Недопустимая запись формулы!");
     }
 
     private double calculateFromRPN()
