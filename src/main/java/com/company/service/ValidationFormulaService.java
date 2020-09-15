@@ -44,9 +44,11 @@ public class ValidationFormulaService implements ValidationService {
         else if((ch == '-') && ((previousType == null) || (previousType == CharacterType.LEFT_BRACKET_OPERATION))){
             return CharacterType.PREFIX_OPERATION;
         }
-        else{
+        else if(operations.contains(ch)){
             return CharacterType.BIN_OPERATION;
         }
+
+        return null;
     }
 
     @Override
