@@ -1,10 +1,11 @@
 package com.company.service;
 
-import com.company.entity.Formula;
 import com.company.exception.InvalidFormulaException;
 
+import java.util.Deque;
+
 public interface TransformService {
-    void transformToRPNView(Formula formula)
+    Deque<Object> transformToRPNView(String formula)
             throws InvalidFormulaException;
 
 

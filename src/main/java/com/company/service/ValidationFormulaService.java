@@ -48,7 +48,7 @@ public class ValidationFormulaService implements ValidationService {
             return CharacterType.BIN_OPERATION;
         }
 
-        return null;
+        throw new InvalidFormulaException("Недопустимая запись формулы!");
     }
 
     @Override

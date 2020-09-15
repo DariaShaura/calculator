@@ -1,6 +1,5 @@
 package com.company.service;
 
-import com.company.dto.InputOutputFormula;
 import com.company.entity.Formula;
 import com.company.exception.DivisionByZeroException;
 import com.company.exception.InvalidFormulaException;
@@ -24,7 +23,7 @@ public class CalculationFormulaService implements CalculationService {
         if (validationService.isFormulaContainsOnlyValidCharacters(strFormula)) {
             formula = new Formula(strFormula.replaceAll(" ", ""));
 
-            transformToService.transformToRPNView(formula);
+            formula.setRpnFormula(transformToService.transformToRPNView(formula.getInputFormula()));
 
             return calculateFromRPN();
         }

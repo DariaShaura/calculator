@@ -1,9 +1,11 @@
 package com.company.service;
 
-import com.company.entity.Formula;
 import com.company.exception.InvalidFormulaException;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.EnumSet;
+import java.util.LinkedList;
 
 public class TransformToService implements TransformService {
 
@@ -13,7 +15,7 @@ public class TransformToService implements TransformService {
         this.validationService = validationService;
     }
 
-    private EnumClassOperator getOperator(CharacterType characterType, char ch)
+    public EnumClassOperator getOperator(CharacterType characterType, char ch)
                     throws InvalidFormulaException {
         for(EnumClassOperator operator: EnumClassOperator.values()){
             if((operator.getOperatorCharacter() == ch) && (operator.getOperationType() == characterType)){
@@ -25,7 +27,7 @@ public class TransformToService implements TransformService {
     }
 
     @Override
-    public void transformToRPNView(Formula formula)
+    public Deque<Object> transformToRPNView(String formula)
             throws InvalidFormulaException {
         Deque<EnumClassOperator> stack = new ArrayDeque<>();
         StringBuilder number = new StringBuilder();
@@ -37,9 +39,9 @@ public class TransformToService implements TransformService {
 
         expectedCharacterTypeSet = validationService.getExpectedCharacterTypeSet(previousType);
 
-        for (int i = 0, length = formula.getInputFormula().length(); i < length; i++) {
+        for (int i = 0, length = formula.length(); i < length; i++) {
 
-            char ch = formula.getInputFormula().charAt(i);
+            char ch = formula.charAt(i);
 
             CharacterType characterType = validationService.getCharacterType(previousType, ch);
             previousType = characterType;
@@ -82,8 +84,13 @@ public class TransformToService implements TransformService {
                     }
 
                     operator = getOperator(characterType, ch);
-                    while (!stack.isEmpty() && (stack.getLast().getPriority().compareTo(operator.getPriority()) > 0)) {
+                    EnumClassOperator lastOperatorInStack = stack.peekLast();
+
+                    while ((lastOperatorInStack != null) &&
+                            ((lastOperatorInStack.getPriority().compareTo(operator.getPriority()) >= 0) ||
+                                    (lastOperatorInStack.getOperationType() == CharacterType.PREFIX_OPERATION))) {
                         rpnFormula.addLast(stack.pollLast());
+                        lastOperatorInStack = stack.peekLast();
                     }
 
                     stack.addLast(operator);
@@ -103,7 +110,7 @@ public class TransformToService implements TransformService {
             rpnFormula.addLast(stack.pollLast());
         }
 
-        formula.setRpnFormula(rpnFormula);
+        return rpnFormula;
     }
 
 }
