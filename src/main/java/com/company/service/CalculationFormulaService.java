@@ -20,6 +20,8 @@ public class CalculationFormulaService implements CalculationService {
         validationService = new ValidationFormulaService();
         transformToService = new TransformToService(validationService);
 
+        formula = new Formula(strFormula);
+
         formula.setRpnFormula(transformToService.transformToRPNView(formula.getInputFormula()));
 
         return calculateFromRPN();
