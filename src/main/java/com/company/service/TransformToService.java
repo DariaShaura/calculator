@@ -29,6 +29,12 @@ public class TransformToService implements TransformService {
     @Override
     public Deque<Object> transformToRPNView(String formula)
             throws InvalidFormulaException {
+        if (!validationService.isFormulaContainsOnlyValidCharacters(formula)) {
+            throw new InvalidFormulaException("Недопустимая запись формулы!");
+        }
+
+        formula = formula.replaceAll(" ", "");
+
         Deque<EnumClassOperator> stack = new ArrayDeque<>();
         StringBuilder number = new StringBuilder();
         Deque<Object> rpnFormula = new LinkedList<>();
