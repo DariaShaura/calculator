@@ -20,15 +20,11 @@ public class CalculationFormulaService implements CalculationService {
         validationService = new ValidationFormulaService();
         transformToService = new TransformToService(validationService);
 
-        if (validationService.isFormulaContainsOnlyValidCharacters(strFormula)) {
-            formula = new Formula(strFormula.replaceAll(" ", ""));
+        formula = new Formula(strFormula);
 
-            formula.setRpnFormula(transformToService.transformToRPNView(formula.getInputFormula()));
+        formula.setRpnFormula(transformToService.transformToRPNView(formula.getInputFormula()));
 
-            return calculateFromRPN();
-        }
-
-            throw new InvalidFormulaException("Недопустимая запись формулы!");
+        return calculateFromRPN();
     }
 
     private double calculateFromRPN()

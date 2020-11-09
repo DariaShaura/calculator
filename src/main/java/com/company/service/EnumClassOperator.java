@@ -23,7 +23,7 @@ public enum EnumClassOperator{
         public double calculate(double... operands)
                 throws DivisionByZeroException {
             if(operands[1] == 0) {
-                throw new DivisionByZeroException("Деление на ноль");
+                throw new DivisionByZeroException(String.format("Деление на ноль: %f/%f", operands[0], operands[1]));
             }
             return operands[0] / operands[1];
         }
